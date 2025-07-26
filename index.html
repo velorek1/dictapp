@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulary Tracker</title>
+    <title>Vocabulary Guessing Game</title>
     <style>
         * {
             margin: 0;
@@ -17,124 +17,133 @@
             min-height: 100vh;
             padding: 20px;
             color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .game-container {
+            max-width: 600px;
+            width: 100%;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             overflow: hidden;
         }
 
-        .header {
+        .game-header {
             background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
             padding: 30px;
             text-align: center;
             color: white;
         }
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        .game-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header .subtitle {
-            font-size: 1.1rem;
+        .game-header .subtitle {
+            font-size: 1rem;
             opacity: 0.9;
         }
 
-        .stats {
+        .game-content {
+            padding: 30px;
+        }
+
+        .game-stats {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            margin-bottom: 25px;
             padding: 20px;
-            background: rgba(79, 172, 254, 0.1);
-            margin: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             border-radius: 15px;
+            color: white;
         }
 
         .stat-item {
             text-align: center;
-            padding: 15px;
         }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4facfe;
             display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 4px;
         }
 
         .stat-label {
-            color: #666;
             font-size: 0.9rem;
-            margin-top: 5px;
+            opacity: 0.9;
         }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+        .game-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
             padding: 30px;
-        }
-
-        .card {
-            background: white;
             border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(240, 147, 251, 0.3);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        .translation-label {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
         }
 
-        .card h3 {
-            color: #4facfe;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .translation-text {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            word-break: break-word;
+        }
+
+        .comment-text {
+            font-size: 1rem;
+            font-style: italic;
+            opacity: 0.8;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             color: #555;
+            font-size: 1.1rem;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .guess-input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 1rem;
+            padding: 15px 20px;
+            border: 3px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            text-align: center;
             transition: all 0.3s ease;
             background: #fafbfc;
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .guess-input:focus {
             outline: none;
             border-color: #4facfe;
             background: white;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.15);
+            transform: scale(1.02);
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 14px 25px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -143,6 +152,8 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            min-height: 50px;
+            justify-content: center;
         }
 
         .btn-primary {
@@ -151,8 +162,8 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
         }
 
         .btn-secondary {
@@ -177,84 +188,67 @@
 
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .search-section {
-            margin-bottom: 25px;
+        .button-group .btn {
+            flex: 1;
+            min-width: 140px;
         }
 
-        .search-input {
-            position: relative;
-        }
-
-        .search-input input {
-            padding-left: 45px;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #adb5bd;
-        }
-
-        .vocabulary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .game-result {
             margin-top: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .vocab-card {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border-radius: 12px;
             padding: 20px;
-            transition: all 0.3s ease;
-            border-left: 4px solid #4facfe;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        .vocab-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .vocab-word {
+        .result-text {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
-        .vocab-translation {
-            color: #4facfe;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .result-word {
+            font-size: 1.4rem;
+            word-break: break-word;
         }
 
-        .vocab-comment {
-            color: #6c757d;
-            font-size: 0.9rem;
-            font-style: italic;
+        .game-start {
+            text-align: center;
+            padding: 20px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .game-start p {
+            margin-bottom: 25px;
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
+        .start-btn {
+            font-size: 1.2rem;
+            padding: 18px 35px;
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(79, 172, 254, 0.4);
         }
 
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             color: #6c757d;
         }
 
@@ -262,15 +256,26 @@
             border: 3px solid #f3f3f3;
             border-top: 3px solid #4facfe;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            margin: 0 auto 15px;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
         .toast {
@@ -279,12 +284,13 @@
             right: 20px;
             background: #28a745;
             color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             transform: translateX(100%);
             transition: transform 0.3s ease;
             z-index: 1000;
+            font-weight: 600;
         }
 
         .toast.show {
@@ -295,460 +301,164 @@
             background: #dc3545;
         }
 
-        /* Mobile-first optimizations */
+        .toast.info {
+            background: #17a2b8;
+        }
+
+        /* Mobile optimizations */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
-            }
-            
-            .container {
-                border-radius: 15px;
-            }
-            
-            .header {
-                padding: 20px 15px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-                margin-bottom: 8px;
-            }
-            
-            .header .subtitle {
-                font-size: 1rem;
-            }
-            
-            .stats {
-                flex-direction: row;
-                justify-content: space-between;
-                padding: 15px;
-                margin: 15px;
-                gap: 5px;
-            }
-            
-            .stat-item {
-                padding: 10px 5px;
-                flex: 1;
-            }
-            
-            .stat-number {
-                font-size: 1.5rem;
-            }
-            
-            .stat-label {
-                font-size: 0.8rem;
-            }
-            
-            .main-content {
-                grid-template-columns: 1fr;
-                gap: 20px;
                 padding: 15px;
             }
             
-            .card {
-                padding: 20px;
-                border-radius: 12px;
+            .game-header {
+                padding: 25px 20px;
             }
             
-            .card h3 {
-                font-size: 1.2rem;
-                margin-bottom: 15px;
-            }
-            
-            /* Game optimizations for mobile */
-            .game-stats {
-                padding: 12px !important;
-                margin-bottom: 15px !important;
-            }
-            
-            .game-stats > div {
-                text-align: center;
-            }
-            
-            .game-stats span:first-child {
-                font-size: 1.1rem !important;
-            }
-            
-            .game-stats span:last-child {
-                font-size: 0.8rem !important;
-            }
-            
-            .game-card {
-                padding: 20px !important;
-                margin-bottom: 15px !important;
-            }
-            
-            #gameTranslation {
-                font-size: 1.5rem !important;
-                margin-bottom: 12px !important;
-                word-break: break-word;
-            }
-            
-            #gameComment {
-                font-size: 0.9rem !important;
-            }
-            
-            #guessInput {
-                font-size: 1.2rem !important;
-                padding: 15px !important;
-                text-align: center;
-                border-radius: 12px;
-            }
-            
-            /* Button optimizations for mobile */
-            .btn {
-                padding: 14px 20px;
-                font-size: 1rem;
-                border-radius: 12px;
-                min-height: 48px; /* Touch-friendly minimum */
-            }
-            
-            .button-group {
-                flex-direction: column;
-                gap: 12px;
-            }
-            
-            .button-group .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            /* Form optimizations for mobile */
-            .form-group {
-                margin-bottom: 18px;
-            }
-            
-            .form-group input, 
-            .form-group select, 
-            .form-group textarea {
-                padding: 14px 16px;
-                font-size: 1.1rem;
-                border-radius: 12px;
-                -webkit-appearance: none; /* Remove iOS styling */
-            }
-            
-            .form-group textarea {
-                resize: vertical;
-                min-height: 100px;
-            }
-            
-            /* Toast notifications for mobile */
-            .toast {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                transform: translateY(-100%);
-                font-size: 1rem;
-                padding: 16px 20px;
-            }
-            
-            .toast.show {
-                transform: translateY(0);
-            }
-            
-            /* Game result optimizations */
-            #gameResult {
-                padding: 18px !important;
-                border-radius: 12px !important;
-                margin-top: 15px !important;
-            }
-            
-            #gameResultText {
-                font-size: 1.1rem !important;
-                margin-bottom: 8px !important;
-            }
-            
-            #gameResultWord {
-                font-size: 1.2rem !important;
-                word-break: break-word;
-            }
-            
-            /* Hide less important sections on mobile to focus on main features */
-            .card:nth-child(3) {
-                order: 3; /* Move browse & manage to bottom */
-            }
-            
-            /* Vocabulary grid mobile optimization */
-            .vocabulary-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-                max-height: 300px;
-                padding: 5px;
-            }
-            
-            .vocab-card {
-                padding: 15px;
-                border-radius: 10px;
-            }
-            
-            .vocab-word {
-                font-size: 1.1rem;
-                margin-bottom: 6px;
-            }
-            
-            .vocab-translation {
-                font-size: 1rem;
-                margin-bottom: 6px;
-            }
-            
-            .vocab-comment {
-                font-size: 0.85rem;
-            }
-            
-            /* Search input mobile optimization */
-            .search-input input {
-                padding: 14px 16px 14px 45px;
-                font-size: 1.1rem;
-            }
-            
-            .search-icon {
-                left: 16px;
-                font-size: 1.1rem;
-            }
-            
-            /* Loading indicator mobile */
-            .loading {
-                padding: 15px;
-            }
-            
-            .spinner {
-                width: 25px;
-                height: 25px;
-            }
-        }
-        
-        /* Extra small mobile devices */
-        @media (max-width: 480px) {
-            .header h1 {
+            .game-header h1 {
                 font-size: 1.8rem;
             }
             
-            .stats {
-                flex-direction: column;
-                gap: 8px;
+            .game-content {
+                padding: 20px;
             }
             
-            .stat-item {
-                padding: 8px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+            .game-stats {
+                padding: 15px;
+                margin-bottom: 20px;
             }
             
             .stat-number {
                 font-size: 1.3rem;
             }
             
-            .card {
-                padding: 15px;
+            .game-card {
+                padding: 25px 20px;
             }
             
-            #gameTranslation {
-                font-size: 1.3rem !important;
+            .translation-text {
+                font-size: 1.6rem;
             }
             
-            .btn {
+            .guess-input {
+                font-size: 1.1rem;
                 padding: 12px 16px;
-                font-size: 0.95rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group .btn {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100%);
+            }
+            
+            .toast.show {
+                transform: translateY(0);
             }
         }
-        
-        /* Landscape mobile optimization */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .stats {
-                flex-direction: row;
-                gap: 10px;
+
+        @media (max-width: 480px) {
+            .game-header h1 {
+                font-size: 1.6rem;
             }
             
-            .main-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-            
-            .card:last-child {
-                grid-column: 1 / -1;
+            .translation-text {
+                font-size: 1.4rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 Vocabulary Tracker</h1>
-            <p class="subtitle">Master new words, expand your mind</p>
-            <a href="https://docs.google.com/spreadsheets/d/1eqlVGE_KUzLVXayl8p_sveaO1yY8xMQ9H9onj1JqF9Y/edit?usp=sharing"
-               target="_blank" class="btn btn-secondary" style="margin-top: 15px;">
-                📊 View Spreadsheet
-            </a>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🎮 Vocabulary Game</h1>
+            <p class="subtitle">Guess the word from its translation</p>
         </div>
 
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number" id="totalWords">0</span>
-                <span class="stat-label">Total Words</span>
+        <div class="game-content">
+            <div id="loadingIndicator" class="loading">
+                <div class="spinner"></div>
+                Loading your vocabulary from Google Sheets...
             </div>
-            <div class="stat-item">
-                <span class="stat-number" id="recentWords">0</span>
-                <span class="stat-label">This Session</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="avgLength">0</span>
-                <span class="stat-label">Avg Word Length</span>
-            </div>
-        </div>
 
-        <div class="main-content">
-            <!-- Prioritize game for mobile users -->
-            <div class="card" style="order: 1;">
-                <h3>🎮 Guess the Word Game</h3>
-                <div id="gameSection">
-                    <div class="game-stats" style="display: flex; justify-content: space-between; margin-bottom: 20px; padding: 15px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 10px; color: white;">
-                        <div>
-                            <span style="display: block; font-size: 1.2rem; font-weight: bold;" id="gameScore">0</span>
-                            <span style="font-size: 0.9rem;">Correct</span>
-                        </div>
-                        <div>
-                            <span style="display: block; font-size: 1.2rem; font-weight: bold;" id="gameAttempts">0</span>
-                            <span style="font-size: 0.9rem;">Attempts</span>
-                        </div>
-                        <div>
-                            <span style="display: block; font-size: 1.2rem; font-weight: bold;" id="gameAccuracy">0%</span>
-                            <span style="font-size: 0.9rem;">Accuracy</span>
-                        </div>
+            <div id="gameContent" style="display: none;">
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="gameScore">0</span>
+                        <span class="stat-label">Correct</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="gameAttempts">0</span>
+                        <span class="stat-label">Attempts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="gameAccuracy">0%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                </div>
+
+                <div id="gameArea" style="display: none;">
+                    <div class="game-card">
+                        <div class="translation-label">Translation:</div>
+                        <div class="translation-text" id="gameTranslation"></div>
+                        <div class="comment-text" id="gameComment"></div>
                     </div>
 
-                    <div id="gameArea" style="display: none;">
-                        <div class="game-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
-                            <div style="font-size: 1.1rem; margin-bottom: 10px; opacity: 0.9;">Translation:</div>
-                            <div id="gameTranslation" style="font-size: 1.8rem; font-weight: bold; margin-bottom: 15px;"></div>
-                            <div style="font-size: 0.95rem; font-style: italic; opacity: 0.8;" id="gameComment"></div>
-                        </div>
-                        <div id="gameResult" style="margin-top: 1px; padding: 1px; border-radius: 10px; text-align: center; display: none;">
-                            <div id="gameResultText" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;"></div>
-                            <div id="gameResultWord" style="font-size: 1.3rem;"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="guessInput" style="font-size: 1.1rem; font-weight: bold;">Your Guess:</label>
-                            <input type="text" id="guessInput" placeholder="Type your guess here..." style="font-size: 1.1rem; text-align: center;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                        </div>
-
-                        <div class="button-group">
-                            <button onclick="submitGuess()" class="btn btn-primary">
-                                ✨ Submit Guess
-                            </button>
-                            <button onclick="skipWord()" class="btn btn-secondary">
-                                ⏭️ Skip
-                            </button>
-                            <button onclick="stopGame()" class="btn btn-danger">
-                                🛑 Stop Game
-                            </button>
-                        </div>
-
-
+                    <div class="game-result" id="gameResult">
+                        <div class="result-text" id="gameResultText"></div>
+                        <div class="result-word" id="gameResultWord"></div>
                     </div>
 
-                    <div id="gameStart" class="text-center">
-                        <p style="margin-bottom: 20px; color: #666; font-size: 1.1rem;">Test your vocabulary knowledge! We'll show you the translation and you guess the word.</p>
-                        <button onclick="startGame()" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 30px;">
-                            🎯 Start Game
+                    <div class="form-group">
+                        <label for="guessInput">Your Guess:</label>
+                        <input type="text" id="guessInput" class="guess-input" placeholder="Type your guess here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="submitGuess()" class="btn btn-primary">
+                            ✨ Submit Guess
+                        </button>
+                        <button onclick="skipWord()" class="btn btn-secondary">
+                            ⏭️ Skip
+                        </button>
+                        <button onclick="stopGame()" class="btn btn-danger">
+                            🛑 Stop Game
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Prioritize add word for mobile users -->
-            <div class="card" style="order: 2;">
-                <h3>➕ Add New Word</h3>
-                <form id="addWordForm">
-                    <div class="form-group">
-                        <label for="word">Word</label>
-                        <input type="text" id="word" name="word" placeholder="Enter a new word..." required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    </div>
-                    <div class="form-group">
-                        <label for="translation">Translation</label>
-                        <input type="text" id="translation" name="translation" placeholder="Enter translation..." required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    </div>
-                    <div class="form-group">
-                        <label for="comment">Comment/Context</label>
-                        <textarea id="comment" name="comment" rows="3" placeholder="Add context, notes, or example usage..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        ✨ Add Word
-                    </button>
-                </form>
-
-                <div class="form-group" style="margin-top: 30px;">
-                    <label for="wordSelect">Quick Lookup</label>
-                    <select id="wordSelect" onchange="showTranslation()">
-                        <option value="">Select a word...</option>
-                    </select>
-                    <p id="translationDisplay" style="margin-top: 10px; font-weight: 600; color: #4facfe;"></p>
-                </div>
-            </div>
-
-            <!-- Move browse & manage to bottom for mobile -->
-            <div class="card" style="order: 3;">
-                <h3>🔍 Browse & Manage</h3>
-                
-                <div class="search-section">
-                    <div class="search-input">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="searchInput" placeholder="Search words or translations..." onkeyup="filterWords()">
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button onclick="refreshData()" class="btn btn-primary">
-                        🔄 Refresh
-                    </button>
-                    <button onclick="querySpecific()" class="btn btn-secondary">
-                        🎯 Query Entry
-                    </button>
-                    <button onclick="clearAll()" class="btn btn-danger">
-                        🗑️ Clear All
+                <div id="gameStart" class="game-start">
+                    <p>Test your vocabulary knowledge! We'll show you the translation and you guess the English word.</p>
+                    <p><strong>Total words loaded: <span id="wordCount">0</span></strong></p>
+                    <button onclick="startGame()" class="start-btn">
+                        🎯 Start Game
                     </button>
                 </div>
-
-                <div id="querySection" style="margin-top: 20px; display: none;">
-                    <div class="form-group">
-                        <label for="queryNumber">Entry Number</label>
-                        <input type="number" id="queryNumber" min="1" placeholder="Enter entry number...">
-                    </div>
-                    <button onclick="displaySpecificEntry()" class="btn btn-primary">Query</button>
-                </div>
-
-                <div id="resultDisplay" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; display: none;">
-                    <strong>Result:</strong> <span id="resultText"></span>
-                </div>
             </div>
-        </div>
-
-        <div class="card" style="margin: 0 30px 30px 30px;">
-            <h3>📖 Your Vocabulary</h3>
-            <div id="loadingIndicator" class="loading">
-                <div class="spinner"></div>
-                Loading your vocabulary...
-            </div>
-            <div id="vocabularyGrid" class="vocabulary-grid" style="display: none;"></div>
         </div>
     </div>
 
     <div id="toast" class="toast"></div>
 
     <script>
-        // Configuration
+        // Your original Google Sheets configuration
         const CONFIG = {
             spreadsheetId: '1eqlVGE_KUzLVXayl8p_sveaO1yY8xMQ9H9onj1JqF9Y',
             sheetName: 'Sheet1',
-            baseUrl: 'https://script.google.com/macros/s/AKfycbw5VENEF7Dg1jhT0PKvhIUtp6rhemwGnM0vM4wCFbPR9sPOqeU/exec',
-            deleteUrl: 'https://script.google.com/macros/s/AKfycbziHyzYjkL2IMxicLS97_CR9eb7ZRxQDtTl0vr0GiXaHDepNho/exec',
-            addUrl: 'https://script.google.com/macros/s/AKfycbyQMdfdOdY0eh3yuA75grEZptu1E1ATtikJaj1Wd6AMy88nzBnG/exec'
+            baseUrl: 'https://script.google.com/macros/s/AKfycbw5VENEF7Dg1jhT0PKvhIUtp6rhemwGnM0vM4wCFbPR9sPOqeU/exec'
         };
 
         let vocabularyData = [];
-        let filteredData = [];
-        let sessionWordCount = 0;
-
+        
         // Game variables
         let gameActive = false;
         let currentGameWord = null;
@@ -756,42 +466,13 @@
         let gameAttempts = 0;
         let usedWords = new Set();
 
-        // Initialize app
+        // Initialize the game
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
             setupEventListeners();
+            loadVocabularyData();
         });
 
-        function initializeApp() {
-            setDefaultValues();
-            refreshData();
-        }
-
-        function setDefaultValues() {
-            document.getElementById('word').value = 'nuisance';
-            document.getElementById('translation').value = 'incordio';
-            document.getElementById('comment').value = 'countable';
-        }
-
         function setupEventListeners() {
-            // Form submission
-            document.getElementById('addWordForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                addNewWord();
-            });
-
-            // Search functionality
-            document.getElementById('searchInput').addEventListener('input', filterWords);
-
-            // Focus effects
-            document.getElementById('queryNumber').addEventListener('focus', function() {
-                this.style.background = '#fff3cd';
-            });
-
-            document.getElementById('queryNumber').addEventListener('blur', function() {
-                this.style.background = '#fafbfc';
-            });
-
             // Game input enter key
             document.getElementById('guessInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && gameActive) {
@@ -800,19 +481,7 @@
             });
         }
 
-        // API Functions
-        async function makeRequest(url, options = {}) {
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return await response.text();
-            } catch (error) {
-                console.error('Request failed:', error);
-                showToast('Network error occurred', 'error');
-                throw error;
-            }
-        }
-
+        // Your original Google Sheets fetch function
         async function fetchVocabularyData() {
             const url = `${CONFIG.baseUrl}?spreadsheetId=${CONFIG.spreadsheetId}&sheet=${CONFIG.sheetName}`;
             console.log('Fetching from URL:', url);
@@ -852,91 +521,16 @@
             }
         }
 
-        async function addNewWord() {
-            const wordInput = document.getElementById('word');
-            const translationInput = document.getElementById('translation');
-            const commentInput = document.getElementById('comment');
-
-            const word = wordInput.value.trim();
-            const translation = translationInput.value.trim();
-            const comment = commentInput.value.trim();
-
-            if (!word || !translation) {
-                showToast('Please fill in both word and translation', 'error');
-                return;
-            }
-
-            // Check for duplicates
-            if (vocabularyData.some(item => item.WORD.toLowerCase() === word.toLowerCase())) {
-                showToast('This word already exists!', 'error');
-                return;
-            }
-
+        async function loadVocabularyData() {
             try {
-                showToast('Adding word...', 'info');
-
-                // Use the exact same approach as your original script
-                var text = new FormData();
-                text.append('spreadsheet_id', CONFIG.spreadsheetId);
-                text.append('sheet', CONFIG.sheetName);
-                text.append('rows', '');
-                
-                var object = {};
-                text.forEach(function(value, key){
-                    object[key] = value;
-                });
-                
-                var json = JSON.stringify(object);
-                var temp, temp2, data;
-                var num = json.indexOf("}");
-                temp = json.substring(0, num-2);
-                temp2 = '[["' + word + '","' + translation + '","' + comment + '"]]}'
-                data = temp + temp2;
-
-                // Use XMLHttpRequest like your original script
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', CONFIG.addUrl, true);
-                xhr.onload = function () {
-                    if (this.responseText !== "") {
-                        // Clear form
-                        wordInput.value = '';
-                        translationInput.value = '';
-                        commentInput.value = '';
-
-                        sessionWordCount++;
-                        showToast('Word added successfully! ✨');
-                        
-                        // Refresh data after successful add
-                        setTimeout(async () => {
-                            await refreshData();
-                        }, 500);
-                    } else {
-                        showToast('Failed to add word - empty response', 'error');
-                    }
-                };
-                
-                xhr.onerror = function() {
-                    showToast('Network error while adding word', 'error');
-                };
-                
-                xhr.send(data);
-                
-            } catch (error) {
-                console.error('Error adding word:', error);
-                showToast('Failed to add word. Please try again.', 'error');
-            }
-        }
-
-        async function refreshData() {
-            try {
-                console.log('Starting data refresh...');
+                console.log('Starting data load...');
                 document.getElementById('loadingIndicator').style.display = 'block';
-                document.getElementById('vocabularyGrid').style.display = 'none';
+                document.getElementById('gameContent').style.display = 'none';
 
                 const rawData = await fetchVocabularyData();
                 console.log('Raw data received:', rawData);
                 
-                // Process the data - your original script expects specific column names
+                // Process the data using your original logic
                 vocabularyData = rawData.map(item => {
                     // Handle both object format and array format
                     if (Array.isArray(item)) {
@@ -960,23 +554,25 @@
                 }).filter(item => item.WORD && item.TRANSLATION); // Filter out empty entries
                 
                 console.log('Processed vocabulary data:', vocabularyData);
-                filteredData = [...vocabularyData];
                 
-                updateStats();
-                updateWordSelect();
-                displayVocabulary();
-                
+                document.getElementById('wordCount').textContent = vocabularyData.length;
                 document.getElementById('loadingIndicator').style.display = 'none';
-                document.getElementById('vocabularyGrid').style.display = 'grid';
+                document.getElementById('gameContent').style.display = 'block';
                 
-                console.log('Data refresh completed successfully');
+                if (vocabularyData.length === 0) {
+                    showToast('No vocabulary data found in your Google Sheet!', 'error');
+                } else {
+                    showToast(`Successfully loaded ${vocabularyData.length} words from your Google Sheet! 📚`);
+                }
+                
+                console.log('Data load completed successfully');
             } catch (error) {
-                console.error('Error in refreshData:', error);
+                console.error('Error in loadVocabularyData:', error);
                 document.getElementById('loadingIndicator').innerHTML = `
                     <div style="color: #dc3545;">
-                        <strong>Failed to load vocabulary data</strong><br>
+                        <strong>Failed to load vocabulary data from Google Sheets</strong><br>
                         <small>Error: ${error.message}</small><br>
-                        <button onclick="refreshData()" class="btn btn-primary" style="margin-top: 10px;">
+                        <button onclick="loadVocabularyData()" class="btn btn-primary" style="margin-top: 15px;">
                             🔄 Try Again
                         </button>
                     </div>
@@ -984,149 +580,6 @@
             }
         }
 
-        async function clearAll() {
-            if (!confirm('Are you sure you want to delete ALL vocabulary entries? This cannot be undone!')) {
-                return;
-            }
-
-            const data = {
-                spreadsheet_id: CONFIG.spreadsheetId,
-                sheet: CONFIG.sheetName,
-                row_position: '2'
-            };
-
-            try {
-                showToast('Clearing all data...', 'info');
-                await makeRequest(CONFIG.deleteUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                vocabularyData = [];
-                filteredData = [];
-                sessionWordCount = 0;
-                updateStats();
-                updateWordSelect();
-                displayVocabulary();
-                showToast('All data cleared');
-            } catch (error) {
-                showToast('Failed to clear data', 'error');
-            }
-        }
-
-        // Display Functions
-        function updateStats() {
-            document.getElementById('totalWords').textContent = vocabularyData.length;
-            document.getElementById('recentWords').textContent = sessionWordCount;
-            
-            const avgLength = vocabularyData.length > 0 
-                ? Math.round(vocabularyData.reduce((sum, item) => sum + item.WORD.length, 0) / vocabularyData.length)
-                : 0;
-            document.getElementById('avgLength').textContent = avgLength;
-        }
-
-        function updateWordSelect() {
-            const select = document.getElementById('wordSelect');
-            select.innerHTML = '<option value="">Select a word...</option>';
-            
-            vocabularyData.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.TRANSLATION;
-                option.textContent = item.WORD;
-                option.dataset.comment = item.COMMENT;
-                select.appendChild(option);
-            });
-        }
-
-        function displayVocabulary() {
-            const grid = document.getElementById('vocabularyGrid');
-            
-            console.log('Displaying vocabulary. Filtered data length:', filteredData.length);
-            console.log('Filtered data sample:', filteredData.slice(0, 3));
-            
-            grid.innerHTML = '';
-
-            if (filteredData.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #6c757d; padding: 40px;">No vocabulary entries found</div>';
-                return;
-            }
-
-            filteredData.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'vocab-card fade-in';
-                card.style.animationDelay = `${index * 0.1}s`;
-                
-                // Ensure we have valid data
-                const word = item.WORD || 'Unknown word';
-                const translation = item.TRANSLATION || 'No translation';
-                const comment = item.COMMENT || 'No comment';
-                
-                card.innerHTML = `
-                    <div class="vocab-word">${word}</div>
-                    <div class="vocab-translation">${translation}</div>
-                    <div class="vocab-comment">${comment}</div>
-                `;
-                
-                grid.appendChild(card);
-            });
-            
-            console.log('Vocabulary display completed');
-        }
-
-        function filterWords() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            filteredData = vocabularyData.filter(item => 
-                item.WORD.toLowerCase().includes(searchTerm) ||
-                item.TRANSLATION.toLowerCase().includes(searchTerm) ||
-                (item.COMMENT && item.COMMENT.toLowerCase().includes(searchTerm))
-            );
-            displayVocabulary();
-        }
-
-        function showTranslation() {
-            const select = document.getElementById('wordSelect');
-            const display = document.getElementById('translationDisplay');
-            
-            if (select.value) {
-                const comment = select.options[select.selectedIndex].dataset.comment;
-                display.innerHTML = `Translation: <strong>${select.value}</strong>${comment ? `<br><em>${comment}</em>` : ''}`;
-            } else {
-                display.innerHTML = '';
-            }
-        }
-
-        function querySpecific() {
-            const section = document.getElementById('querySection');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function displaySpecificEntry() {
-            const entryNumber = parseInt(document.getElementById('queryNumber').value);
-            const resultDisplay = document.getElementById('resultDisplay');
-            const resultText = document.getElementById('resultText');
-
-            if (!entryNumber || entryNumber < 1 || entryNumber > vocabularyData.length) {
-                showToast('Please enter a valid entry number', 'error');
-                return;
-            }
-
-            const entry = vocabularyData[entryNumber - 1];
-            resultText.innerHTML = `Entry [${entryNumber}] is <strong>${entry.WORD}</strong> (${entry.TRANSLATION})`;
-            resultDisplay.style.display = 'block';
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type} show`;
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Game Functions
         function startGame() {
             if (vocabularyData.length < 2) {
                 showToast('You need at least 2 words to play the game!', 'error');
@@ -1216,12 +669,12 @@
             resultDiv.style.display = 'block';
             updateGameStats();
             
-            // Auto-advance to next word after 2 seconds
+            // Auto-advance to next word after 2.5 seconds
             setTimeout(() => {
                 if (gameActive) {
                     nextWord();
                 }
-            }, 2000);
+            }, 2500);
         }
 
         function skipWord() {
@@ -1245,7 +698,7 @@
                 if (gameActive) {
                     nextWord();
                 }
-            }, 1500);
+            }, 2000);
         }
 
         function updateGameStats() {
@@ -1253,6 +706,16 @@
             document.getElementById('gameAttempts').textContent = gameAttempts;
             const accuracy = gameAttempts > 0 ? Math.round((gameScore / gameAttempts) * 100) : 0;
             document.getElementById('gameAccuracy').textContent = accuracy + '%';
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>
